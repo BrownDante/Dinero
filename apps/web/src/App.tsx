@@ -1,36 +1,40 @@
 
+import { Navigate, Route, Routes } from "react-router-dom";
+
 import { useAuth } from "./features/auth/AuthProvider";
 import AuthPage from "./features/auth/AuthPage";
+import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 
 function App() {
-  const { session, loading, signOut } = useAuth();
+  const { session, loading } = useAuth();
 
   if (loading) {
     return <main>Loading DINERO...</main>;
   }
 
-  if (!session) {
-    return <AuthPage />;
-  }
-
   return (
-    <main>
-      <h1>Welcome to DINERO!</h1>
+    <Routes>
+      <Route
+        path="/auth"
+        element={
+          session ? <Navigate to="/app" replace /> : <AuthPage />
+        }
+      />
 
-      <p>You are successfully signed in.</p>
+      <Route element={<ProtectedRoute />}>
+        <Route
+          path="/app"
+          element={<main>Welcome to DINERO!</main>}
+        />
+      </Route>
 
-      <button
-        onClick={async () => {
-          const { error } = await signOut();
-
-          if (error) {
-            console.error("Sign-out failed:", error.message);
-          }
-        }}
-      >
-        Sign out
-      </button>
-    </main>
+      <Route
+        path="*"
+        element={
+          <Navigate to={session ? "/app" : "/auth"} replace />
+        }
+      />
+    </Routes>
   );
 }
 
