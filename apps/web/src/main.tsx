@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 
 import { AuthProvider } from "./features/auth/AuthProvider";
+import { WorkspaceProvider } from "./features/workspaces/WorkspaceProvider";
 
 import "./index.css";
 import App from "./App";
@@ -12,7 +13,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <WorkspaceProvider>
+          <App />
+        </WorkspaceProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>,
